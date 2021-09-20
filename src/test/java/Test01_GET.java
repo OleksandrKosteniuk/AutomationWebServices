@@ -1,5 +1,6 @@
 import org.testng.annotations.Test;
 import static io.restassured.RestAssured.*;
+import io.restassured.response.Response;
 
 
 public class Test01_GET {
@@ -16,7 +17,7 @@ public class Test01_GET {
 
     @Test
         public void AddProductToShoppingCart(){
-        given()
+        Response response = given()
                 .contentType("application/json")
                 .accept("application/json")
                 .body(ProductLineItem.getProductLineItemBodyForRequest(5156733,1))
@@ -26,6 +27,8 @@ public class Test01_GET {
                 .log()
                 .all()
                 .assertThat()
-                .statusCode(200);
+                .statusCode(200)
+                .extract()
+                .response();
     }
 }
