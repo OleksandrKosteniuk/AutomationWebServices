@@ -18,7 +18,9 @@ public class Test01_GET {
         public void AddProductToShoppingCart(){
         given()
                 .contentType("application/json")
+                .accept("application/json")
                 .body(ProductLineItem.getProductLineItemBodyForRequest(5156733,1))
+                .when()
                 .post(ShoppingCart.getEndpointForAddProductToShoppingCartPostCall(ShoppingCart.getValueFromCreateShoppingCartResponse("guid")))
                 .then()
                 .log()
