@@ -10,8 +10,8 @@ import org.openqa.selenium.*;
 
 public class Test01_GET {
    
-    @BeforeTest
-    public String createBasket(){
+    @Test
+    public void createBasket(){
         Response createBasketResponse = given().
                 contentType("application/json").
                 accept("application/json").
@@ -20,11 +20,15 @@ public class Test01_GET {
                 then().
                 extract().
                 response();
-        return createBasketResponse.jsonPath().getString("guid");
+        
+        String guid = createBasketResponse.jsonPath().getString("guid");
+        
+        addProductToBasket(guid);
+        
+        openBasketPageByBrowser(guid);
     }
     
-    @Test
-        public void AddProductToBasket(){
+        public void addProductToBasket(String guid){
         Response addProductToBasketResponse = given().
                 contentType("application/json").
                 accept("application/json").
@@ -32,7 +36,7 @@ public class Test01_GET {
                 log().
                 all().
                 when().
-                post("https://www.kruidvat.nl/api/v2/kvn/users/anonymous/carts/"+createBasket()+"/entries?lang=nl").
+                post("https://www.kruidvat.nl/api/v2/kvn/users/anonymous/carts/"+guid+"/entries?lang=nl").
                 then().
                 body(matchesJsonSchemaInClasspath("post.json")).
                 body("entry.product.code",equalTo("5156733")).
@@ -42,12 +46,16 @@ public class Test01_GET {
                 response();
     }
     
-    @Test
-    public void openBasketPageByBrowser(){
+    public void openBasketPageByBrowser(String guid){
         System.setProperty("webdriver.chrome.driver","src/main/resources/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
-        driver.manage().deleteAllCookies();
-        Cookie cookie = new Cookie.Builder("kvn-cart",createBasket()).domain("kruidvat.nl").build();
+        Cookie cookie = new Cookie("kvn-cart",guid);
+        
         driver.get("https://www.kruidvat.nl/cart");
+
+        driver.manage().deleteAllCookies();
+        driver.manage().addCookie(cookie);
+        driver.navigate().refresh();
+        driver.navigate().refresh();
     }
 }
