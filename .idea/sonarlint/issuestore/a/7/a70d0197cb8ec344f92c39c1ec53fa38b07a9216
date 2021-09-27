@@ -1,0 +1,9 @@
+
+x
+java:S1450"VRemove the "product" field and declare it as a local variable in the relevant methods.(„¼”Úùÿÿÿÿ8§µîÀ/
+{
+java:S1450"^Remove the "productQuantity" field and declare it as a local variable in the relevant methods.(·ˆ´·8Õ·îÀ/
+M
+java:S1068"+Remove this unused "product" private field.(„¼”Úùÿÿÿÿ8ªµîÀ/
+P
+java:S1068"3Remove this unused "productQuantity" private field.(·ˆ´·8×·îÀ/

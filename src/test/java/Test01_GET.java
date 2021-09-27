@@ -1,61 +1,40 @@
-import io.restassured.response.ResponseBody;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.BeforeTest;
+import api.ShoppingCartPageApi;
+import driver.DriverManager;
 import org.testng.annotations.Test;
 import static io.restassured.RestAssured.*;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.hamcrest.Matchers.equalTo;
 import io.restassured.response.Response;
-import org.openqa.selenium.*;
+import pages.ShoppingCartPage;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class Test01_GET {
-   
+    ShoppingCartPage shoppingCartPage = new ShoppingCartPage();
+    ShoppingCartPageApi shoppingCartPageApi = new ShoppingCartPageApi();
+    String guid = shoppingCartPageApi.getGuIdFromCreateShoppingCartPostApiCall();
+
     @Test
-    public void createBasket(){
-        Response createBasketResponse = given().
-                contentType("application/json").
-                accept("application/json").
-                when().
-                post("https://www.kruidvat.nl/api/v2/kvn/users/anonymous/carts?lang=nl").
-                then().
-                extract().
-                response();
-        
-        String guid = createBasketResponse.jsonPath().getString("guid");
-        
-        addProductToBasket(guid);
-        
-        openBasketPageByBrowser(guid);
-    }
-    
-        public void addProductToBasket(String guid){
+    public void addProductToBasket() {
         Response addProductToBasketResponse = given().
                 contentType("application/json").
                 accept("application/json").
                 body("{\"product\":{\"code\":\"5156733\"},\" quantity\":1}").
-                log().
-                all().
                 when().
-                post("https://www.kruidvat.nl/api/v2/kvn/users/anonymous/carts/"+guid+"/entries?lang=nl").
+                post(shoppingCartPageApi.getAddProductToShoppingCartEndpoint(guid)).
                 then().
                 body(matchesJsonSchemaInClasspath("post.json")).
-                body("entry.product.code",equalTo("5156733")).
-                body("quantity",equalTo(1)).
+                body(shoppingCartPageApi.getProductCodeJsonPath(), equalTo("5156733")).
+                body(shoppingCartPageApi.getProductQtyJsonPath(), equalTo(1)).
                 statusCode(200).
                 extract().
                 response();
     }
     
-    public void openBasketPageByBrowser(String guid){
-        System.setProperty("webdriver.chrome.driver","src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        Cookie cookie = new Cookie("kvn-cart",guid);
-        
-        driver.get("https://www.kruidvat.nl/cart");
-
-        driver.manage().deleteAllCookies();
-        driver.manage().addCookie(cookie);
-        driver.navigate().refresh();
-        driver.navigate().refresh();
+    @Test
+    public void isProductAddedToShoppingCart(){
+        shoppingCartPage.openShoppingCartPageByBrowser(guid);
+        assertThat(shoppingCartPage.getProductLineItemLink().getAttribute("href").contains("5156733"))
+                .overridingErrorMessage("Product is not added to Shopping Cart")
+                .isTrue();
     }
 }

@@ -1,0 +1,14 @@
+
+{	java:S116"aRename this field "PRODUCT_CODE_JSON_PATH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(©ÜÌòýÿÿÿÿ
+	java:S116"eRename this field "PRODUCT_QUANTITY_JSON_PATH" to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(œË³Çøÿÿÿÿ
+<
+java:S1170"!Make this final field static too.(©ÜÌòýÿÿÿÿ
+<
+java:S1170"!Make this final field static too.(œË³Çøÿÿÿÿ
+j	java:S100
+"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Á®ÎŽ8ÒÛ¿øÀ/
+o	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(Ç÷Žáûÿÿÿÿ8ÔÛ¿øÀ/
+l
+java:S1192"QDefine a constant instead of duplicating this literal "application/json" 4 times.(Õæú›þÿÿÿÿ
+q
+java:S1488"\Immediately return this expression instead of assigning it to the temporary variable "guid".(·„)
