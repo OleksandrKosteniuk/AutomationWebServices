@@ -17,8 +17,6 @@ public class ShoppingCartPageApi {
 
     public String getGuIdFromCreateShoppingCartPostApiCall(){
         String guid = given()
-                .contentType("application/json")
-                .accept("application/json")
                 .when()
                 .post("https://www.kruidvat.nl/api/v2/kvn/users/anonymous/carts?lang=nl")
                 .then()
